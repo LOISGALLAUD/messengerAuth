@@ -2,16 +2,17 @@
 
 import { useCallback, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
+import { BsGithub, BsGoogle } from "react-icons/bs";
 
 import Input from "@/app/components/inputs/Input";
 import Button from "@/app/components/Button";
+import AuthSocialButton from "./AuthSocialButton";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
-
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
       setVariant("REGISTER");
@@ -19,7 +20,6 @@ const AuthForm = () => {
       setVariant("LOGIN");
     }
   }, [variant]);
-
   const {
     register,
     handleSubmit,
@@ -34,7 +34,6 @@ const AuthForm = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
-
     if (variant === "REGISTER") {
       // Axios call to register
     }
@@ -59,7 +58,7 @@ const AuthForm = () => {
               label="Name"
               register={register}
               errors={errors}
-              required
+              disabled={isLoading}
             />
           )}
           <Input
@@ -68,7 +67,7 @@ const AuthForm = () => {
             type="email"
             register={register}
             errors={errors}
-            required
+            disabled={isLoading}
           />
           <Input
             id="password"
@@ -76,7 +75,7 @@ const AuthForm = () => {
             type="password"
             register={register}
             errors={errors}
-            required
+            disabled={isLoading}
           />
           <div>
             <Button disabled={isLoading} fullWidth type="submit">
@@ -95,6 +94,26 @@ const AuthForm = () => {
                 Or continue with
               </span>
             </div>
+          </div>
+          <div className="mt-6 flex gap-2">
+            <AuthSocialButton
+              icon={BsGithub}
+              onClick={() => socialAction("github")}
+            />
+            <AuthSocialButton
+              icon={BsGoogle}
+              onClick={() => socialAction("google")}
+            />
+          </div>
+        </div>
+        <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
+          <div>
+            {variant === "LOGIN"
+              ? "New to Messenger ?"
+              : "Already have an account ?"}
+          </div>
+          <div onClick={toggleVariant} className="underline cursor-pointer">
+            {variant === "LOGIN" ? "Create an account" : "Sign in"}
           </div>
         </div>
       </div>
